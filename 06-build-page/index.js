@@ -15,34 +15,6 @@ fs.mkdir(path.join(__dirname, 'project-dist'), { recursive: true }, (err) => {
         if (err) {
           throw err;
         } else {
-          //очищаем папку project-dist если в ней что-то есть
-          fs.readdir(
-            path.join(__dirname, 'project-dist'),
-            { withFileTypes: true },
-            (err, files) => {
-              if (err) throw err;
-              else {
-                files.forEach((file) => {
-                  if (file.isFile()) {
-                    fs.unlink(
-                      path.join(__dirname, 'project-dist', file.name),
-                      (err) => {
-                        if (err) throw err;
-                      }
-                    );
-                  } else {
-                    fs.rmdir(
-                      path.join(__dirname, 'project-dist', file.name),
-                      { recursive: true },
-                      (err) => {
-                        if (err) throw err;
-                      }
-                    );
-                  }
-                });
-              }
-            }
-          );
           fs.readdir(
             path.join(__dirname, 'assets'),
             { withFileTypes: true },
@@ -72,24 +44,20 @@ fs.mkdir(path.join(__dirname, 'project-dist'), { recursive: true }, (err) => {
   }
 });
 
-//ф-ция для копирования папок
+//ф-ция копирования файлов и папок
 function copyMkdir(fromDir, inDir) {
   fs.mkdir(inDir, { recursive: true }, () => {
     fs.readdir(fromDir, { withFileTypes: true }, (err, files) => {
+      if (err) throw err;
       files.forEach((file) => {
+        const sourcePath = path.join(fromDir, file.name);
+        const destPath = path.join(inDir, file.name);
         if (file.isFile()) {
-          fs.copyFile(
-            path.join(fromDir, file.name),
-            path.join(inDir, file.name),
-            (err) => {
-              if (err) throw err;
-            }
-          );
+          fs.copyFile(sourcePath, destPath, (err) => {
+            if (err) throw err;
+          });
         } else {
-          copyMkdir(
-            path.join(fromDir, file.name),
-            path.join(fromDir, file.name)
-          );
+          copyMkdir(sourcePath, destPath);
         }
       });
     });
