@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const pathDir = path.join(__dirname, 'styles');
 
-let template = '';
+let template;
 
 //создаем новую папку project-dist
 fs.mkdir(path.join(__dirname, 'project-dist'), { recursive: true }, (err) => {
@@ -99,15 +99,6 @@ fs.readdir(
     }
   }
 );
-
-// ф-ция замены тегов
-function replaceTags(template, component) {
-  let pathComponent = path.join(__dirname, `${component}`);
-  const rs = fs.createReadStream(pathComponent, 'utf-8');
-  let comp = `{{component}}`;
-  template = template.replace(comp, rs);
-  return template;
-}
 
 //чтение и запись файла template.html в переменную;
 const readableStream = fs.createReadStream(
