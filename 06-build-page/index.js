@@ -78,6 +78,7 @@ fs.readdir(
   path.join(__dirname, 'components'),
   { withFileTypes: true },
   (err, files) => {
+    if (err) throw err;
     files.forEach((file) => {
       if (file.isFile()) {
         let ext = file.name.toString().split('.')[1];
